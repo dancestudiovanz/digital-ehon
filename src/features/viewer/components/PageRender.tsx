@@ -62,7 +62,7 @@ const renderElement = (element: BookElement) => {
         width: element.width,
         height: element.height,
         transform: `rotate(${element.rotation}deg)`,
-        objectFit: element.objectFit,
+        objectFit: element.objectFit ?? 'cover',
         opacity: element.opacity,
         zIndex: element.zIndex,
       }}

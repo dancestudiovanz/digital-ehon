@@ -385,7 +385,7 @@ export const useBookEditorStore = create<Store>((set, get) => ({
     const el = page?.elements.find((e) => e.id === selectedElementId)
     if (!el || el.type !== 'image') return
     const nextSrc = await applyCornerBackgroundTransparency(el.src)
-    get().updateElement(selectedElementId, { src: nextSrc, objectFit: 'contain' })
+    get().updateElement(selectedElementId, { src: nextSrc, objectFit: 'cover' })
   },
 
   fitSelectedImageToPage: async () => {
@@ -399,7 +399,7 @@ export const useBookEditorStore = create<Store>((set, get) => ({
     const box = computeImageContainOnPage(nw, nh, pw, ph, 20)
     get().updateElement(selectedElementId, {
       ...box,
-      objectFit: 'contain',
+      objectFit: 'cover',
       rotation: 0,
     })
   },

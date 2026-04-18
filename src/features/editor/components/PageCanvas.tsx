@@ -132,16 +132,50 @@ export const PageCanvas = ({
     if (!node) return
     const scaleX = node.scaleX()
     const scaleY = node.scaleY()
-    const width = Math.max(30, node.width() * scaleX)
-    const height = Math.max(30, node.height() * scaleY)
-    node.scaleX(1)
-    node.scaleY(1)
+
+    const konvaNode = node as {
+      getClassName?: () => string
+      findOne?: (sel: string) => unknown
+      width: () => number
+      height: () => number
+      x: () => number
+      y: () => number
+      rotation: () => number
+      scaleX: (v?: number) => number
+      scaleY: (v?: number) => number
+    }
+
+    if (element.type === 'image' && konvaNode.getClassName?.() === 'Group') {
+      const frame = konvaNode.findOne?.('.imageFrame') as
+        | { width: (w?: number) => number; height: (h?: number) => number }
+        | undefined
+      if (!frame) return
+      const width = Math.max(30, frame.width() * scaleX)
+      const height = Math.max(30, frame.height() * scaleY)
+      konvaNode.scaleX(1)
+      konvaNode.scaleY(1)
+      frame.width(width)
+      frame.height(height)
+      onUpdateElement(element.id, {
+        x: konvaNode.x(),
+        y: konvaNode.y(),
+        width,
+        height,
+        rotation: konvaNode.rotation(),
+      })
+      return
+    }
+
+    const width = Math.max(30, konvaNode.width() * scaleX)
+    const height = Math.max(30, konvaNode.height() * scaleY)
+    konvaNode.scaleX(1)
+    konvaNode.scaleY(1)
     onUpdateElement(element.id, {
-      x: node.x(),
-      y: node.y(),
+      x: konvaNode.x(),
+      y: konvaNode.y(),
       width,
       height,
-      rotation: node.rotation(),
+      rotation: konvaNode.rotation(),
     })
   }
 
@@ -280,6 +314,7 @@ export const PageCanvas = ({
                     if (node) nodeMapRef.current[imageElement.id] = node
                   }}
                   selected={selectedElementId === imageElement.id}
+                  objectFit={imageElement.objectFit ?? 'cover'}
                   src={imageElement.src}
                   x={imageElement.x}
                   y={imageElement.y}
