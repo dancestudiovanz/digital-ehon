@@ -79,6 +79,11 @@ export const PageRender = ({
 }: Props) => {
   const sorted = [...page.elements].sort((a, b) => a.zIndex - b.zIndex)
 
+  // transform: scale 後も未スケールの幅・高さでレイアウトされるため、scale<1 のとき
+  // 外側の overflow:hidden + 固定高さで下端・右端が切れる。負の margin でレイアウトを補正する。
+  const shrinkX = scale < 1 ? pageWidth * (1 - scale) : 0
+  const shrinkY = scale < 1 ? pageHeight * (1 - scale) : 0
+
   return (
     <div
       className={`relative overflow-hidden ${FRAME_CLASS[frameShape]}`}
@@ -95,6 +100,8 @@ export const PageRender = ({
           height: pageHeight,
           transform: `scale(${scale})`,
           transformOrigin: 'top left',
+          marginRight: shrinkX > 0 ? -shrinkX : undefined,
+          marginBottom: shrinkY > 0 ? -shrinkY : undefined,
         }}
       >
         {sorted.map(renderElement)}

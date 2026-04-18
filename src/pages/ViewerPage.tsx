@@ -142,7 +142,7 @@ export const ViewerPage = () => {
             />
           ) : (
             <div className="flex w-full max-w-full justify-center overflow-x-hidden overflow-y-visible py-1 sm:py-2">
-              <div className="mx-auto flex max-w-full overflow-hidden rounded-xl shadow-[0_32px_64px_-20px_rgba(0,0,0,0.55)] ring-1 ring-black/20">
+              <div className="mx-auto flex max-w-full overflow-visible rounded-xl shadow-[0_32px_64px_-20px_rgba(0,0,0,0.55)] ring-1 ring-black/20 [isolation:isolate]">
                 <PageRender
                   page={step.pages[0]}
                   pageWidth={pageSize.width}
